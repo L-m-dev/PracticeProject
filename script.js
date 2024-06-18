@@ -1,5 +1,22 @@
 console.log("Hello World..!")
 
+let gameButtons = document.querySelectorAll('.gamebutton');
+let humanScoreDom = document.querySelector('#human-score');
+let computerScoreDom = document.querySelector('#computer-score');
+let winnerTextDom = document.querySelector('#winner-text');
+ let humanScore;
+ let computerScore;
+ let winnerFound = false;
+
+    gameButtons.forEach((b) => { 
+        let chosenHumanPlay;
+        b.addEventListener('click', function(b){
+         chosenHumanPlay = b.target.name;
+         console.log(playRound(getHumanChoice(chosenHumanPlay),getComputerChoice()));
+    })}); 
+
+        
+
 function getComputerChoice(){
 
    let numberGenerated = Math.random();
@@ -16,16 +33,8 @@ function getComputerChoice(){
 
 }
 
-function getHumanChoice(){
-    let chosenPlay;
-    try {
-        chosenPlay = window.prompt('Choose\n 1. Rock\n 2.Paper\n 3. Scissors');
-        if (!(chosenPlay == 1 || chosenPlay == 2 || chosenPlay == 3)) {
-            throw new InvalidChoiceException();
-        }
-    } catch (error) {
-        return error;
-    } finally {
+function getHumanChoice(chosenPlay){
+     console.log(chosenPlay);
         if (chosenPlay == 1) {
             return 'Rock';
         } else if (chosenPlay == 2) {
@@ -36,10 +45,29 @@ function getHumanChoice(){
             return 'None';
         }
     }
-}   
+
 
 function playRound(humanChoice, computerChoice){
+    if(humanScore == undefined || computerScore == undefined){
+     humanScore=0;
+     computerScore=0;
+    }
+    if(winnerFound){
+        winnerTextDom.textContent ='';
+        winnerFound=false;
+        humanScore=0;
+        computerScore=0;
+
+          humanScoreDom.textContent=humanScore;
+        computerScoreDom.textContent=computerScore;
+    }
+         humanScoreDom.textContent=humanScore;
+        computerScoreDom.textContent=computerScore;
+
+    
     let winner = '';
+
+
     if(humanChoice == 'None'){
         winner = 'ComputerWin';
     } else
@@ -59,17 +87,39 @@ function playRound(humanChoice, computerChoice){
                 }
 
             }
+
+            if(winner=='HumanWin'){
+                humanScore++;
+                humanScoreDom.textContent = humanScore;
+            }else
+            if(winner=='ComputerWin'){
+                computerScore++;
+                computerScoreDom.textContent = computerScore;
+    
+            }
+            if(computerScore==5 || humanScore==5){
+                if(computerScore==5){
+                    winnerTextDom.textContent = 'Computer wins';
+                    winnerFound=true;
+
+                } else 
+                if(humanScore==5){
+                    winnerTextDom.textContent = 'Human wins';
+                    winnerFound=true;
+                }
+            }
         
+        console.log(`score ${computerScore} and winner is ${winner}`);
             return winner;
         }
     
 function playGame(){
+    
     let humanScore=0;
     let computerScore=0;
     let cChoice;
     let hChoice;
-
-    while(!(humanScore==5^computerScore==5)){
+ 
           cChoice = getComputerChoice();
            hChoice = getHumanChoice();
          let winner = playRound(hChoice, cChoice);
@@ -77,15 +127,19 @@ function playGame(){
         console.log(`Winner : ${winner}`);
         if(winner=='HumanWin'){
             humanScore++;
+            humanScoreDom.textContent = humanScore;
         }else
         if(winner=='ComputerWin'){
             computerScore++;
+            computerScoreDom.textContent = computerScore;
+
         }
         console.log(winner);
         console.log(`Score: \nhuman: ${humanScore}\ncomputer: ${computerScore} `);
-    }
+     
+ 
+        }
+    
 
 
-
-}
  
